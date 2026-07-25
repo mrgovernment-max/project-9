@@ -217,32 +217,88 @@ nav.links a:hover{color:var(--brass-2);}
 .hero-stats div span{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--bone-faint);}
 
 /* hero visual */
-.hero-visual{position:relative;}
+.hero-visual{position:relative;perspective:1000px;}
 .spec-card{
   background:var(--surface);border:1px solid var(--line);
   border-radius:2px;padding:30px;
   box-shadow:var(--shadow);
   position:relative;
+  transform:perspective(1000px) rotateX(0deg) rotateY(0deg);
+  transition:transform .5s cubic-bezier(.22,1,.36,1), box-shadow .5s ease;
+  will-change:transform;
 }
+.spec-card.tilting{transition:transform .08s linear;}
+.spec-card:hover{box-shadow:0 40px 70px -30px rgba(0,0,0,0.7);}
 .spec-card .tag{
   position:absolute;top:-11px;left:22px;
   background:var(--brass);color:#171208;
   font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
   padding:4px 10px;border-radius:2px;
 }
-.sock-art{width:100%;height:auto;}
-.pin{
-  position:absolute;
-  background:var(--ink);border:1px solid var(--line-strong);
-  padding:7px 11px;border-radius:2px;
-  font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
-  color:var(--bone-dim);
-  box-shadow:0 12px 24px -12px rgba(0,0,0,0.6);
+.sock-art-wrap{position:relative;}
+.sock-art{width:100%;height:auto;display:block;transition:filter .3s ease;}
+
+/* interactive hotspots */
+.hotspot{
+  position:absolute;transform:translate(-50%,-50%);
+  width:22px;height:22px;border:0;padding:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.pin b{color:var(--brass-2);font-weight:700;}
-.pin-1{top:8%;left:-8%;}
-.pin-2{bottom:14%;right:-10%;}
-@media (max-width:900px){.pin{display:none;}}
+.hotspot::before{
+  content:'';position:absolute;inset:0;margin:auto;width:9px;height:9px;border-radius:50%;
+  background:var(--brass-2);box-shadow:0 0 0 3px rgba(10,10,11,0.85);
+  transition:transform .25s ease, background .25s ease;
+}
+.hotspot::after{
+  content:'';position:absolute;inset:0;margin:auto;width:9px;height:9px;border-radius:50%;
+  border:1.5px solid var(--brass-2);opacity:0;
+  animation:hotspotPulse 2.4s ease-out infinite;
+}
+.hotspot:nth-of-type(2)::after{animation-delay:.6s;}
+.hotspot:hover::before,.hotspot.active::before{transform:scale(1.3);background:var(--bone);}
+@keyframes hotspotPulse{
+  0%{width:9px;height:9px;opacity:.7;}
+  100%{width:34px;height:34px;opacity:0;}
+}
+.hotspot-tip{
+  position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,4px);
+  background:var(--ink);border:1px solid var(--line-strong);
+  padding:7px 11px;border-radius:2px;white-space:nowrap;
+  font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
+  color:var(--bone-dim);box-shadow:0 12px 24px -12px rgba(0,0,0,0.6);
+  opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
+}
+.hotspot-tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--line-strong);
+}
+.hotspot-tip b{color:var(--brass-2);font-weight:700;}
+.hotspot:hover .hotspot-tip,.hotspot.active .hotspot-tip{opacity:1;transform:translate(-50%,0);}
+.hotspot-sole{left:80%;top:81%;}
+.hotspot-sole .hotspot-tip{left:auto;right:-10px;transform:translate(0,4px);}
+.hotspot-sole .hotspot-tip::after{left:auto;right:16px;transform:none;}
+.hotspot-sole:hover .hotspot-tip,.hotspot-sole.active .hotspot-tip{transform:translate(0,0);}
+.hotspot-nine{left:46.9%;top:62.7%;}
+@media (prefers-reduced-motion:reduce){
+  .spec-card{transition:none;}
+  .hotspot::after{animation:none;}
+}
+
+/* mobile swipe-to-tilt toggle */
+.spec-card.interactive-mode{border-color:var(--brass-dim);}
+.tilt-toggle{display:none;}
+@media (hover:none){
+  .hero-visual{text-align:center;}
+  .tilt-toggle{
+    display:inline-flex;align-items:center;gap:7px;margin-top:16px;
+    background:transparent;border:1px solid var(--line-strong);
+    color:var(--bone-dim);font-size:10.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+    padding:9px 16px;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .tilt-toggle svg{flex:none;color:var(--brass-2);}
+  .tilt-toggle.active{border-color:var(--brass-dim);color:var(--brass-2);background:rgba(201,160,78,0.08);}
+}
 
 /* ---------- section shell ---------- */
 section{padding:96px 0;border-bottom:1px solid var(--line);}
@@ -521,18 +577,28 @@ footer{padding:48px 0 40px;}
         </div>
       </div>
       <div class="hero-visual">
-        <div class="spec-card">
+        <div class="spec-card" id="specCard">
           <span class="tag">No. 9 &mdash; Signature Sock</span>
-          <svg class="sock-art" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M120 20 L120 150 Q120 190 160 210 L245 250 Q270 260 268 235 Q265 210 240 198 L190 172 Q170 160 170 138 L170 20 Z" stroke="#c9a04e" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
-            <path d="M120 60 L170 60 M120 90 L170 90 M120 120 L170 120" stroke="#8c723a" stroke-width="1" stroke-dasharray="2 4"/>
-            <circle cx="150" cy="188" r="15" stroke="#e4c374" stroke-width="1.4"/>
-            <use href="#nineMark" x="142.65" y="177" width="14.7" height="22"/>
-            <path d="M245 250 Q260 246 264 233" stroke="#ede7d9" stroke-width="0.8" opacity="0.4"/>
-          </svg>
-          <div class="pin pin-1">Anti-Slip <b>Grip Sole</b></div>
-          <div class="pin pin-2">Embroidered <b>No.9 Detail</b></div>
+          <div class="sock-art-wrap">
+            <svg class="sock-art" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M120 20 L120 150 Q120 190 160 210 L245 250 Q270 260 268 235 Q265 210 240 198 L190 172 Q170 160 170 138 L170 20 Z" stroke="#c9a04e" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+              <path d="M120 60 L170 60 M120 90 L170 90 M120 120 L170 120" stroke="#8c723a" stroke-width="1" stroke-dasharray="2 4"/>
+              <circle cx="150" cy="188" r="15" stroke="#e4c374" stroke-width="1.4"/>
+              <use href="#nineMark" x="142.65" y="177" width="14.7" height="22"/>
+              <path d="M245 250 Q260 246 264 233" stroke="#ede7d9" stroke-width="0.8" opacity="0.4"/>
+            </svg>
+            <button type="button" class="hotspot hotspot-nine" aria-label="Embroidered No.9 Detail">
+              <span class="hotspot-tip">Embroidered <b>No.9 Detail</b></span>
+            </button>
+            <button type="button" class="hotspot hotspot-sole" aria-label="Anti-Slip Grip Sole">
+              <span class="hotspot-tip">Anti-Slip <b>Grip Sole</b></span>
+            </button>
+          </div>
         </div>
+        <button type="button" class="tilt-toggle" id="tiltToggle" aria-pressed="false">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M5 3 L2 8 L5 13 M11 3 L14 8 L11 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Swipe to Explore</span>
+        </button>
       </div>
     </div>
   </section>
@@ -767,6 +833,86 @@ footer{padding:48px 0 40px;}
       closeNav();
     }
   });
+
+  var hotspots = document.querySelectorAll('.hotspot');
+  hotspots.forEach(function(h){
+    h.addEventListener('click', function(e){
+      e.stopPropagation();
+      var wasActive = h.classList.contains('active');
+      hotspots.forEach(function(o){ o.classList.remove('active'); });
+      if (!wasActive) h.classList.add('active');
+    });
+  });
+  document.addEventListener('click', function(){
+    hotspots.forEach(function(o){ o.classList.remove('active'); });
+  });
+
+  var specCard = document.getElementById('specCard');
+  var canTilt = specCard
+    && window.matchMedia('(hover:hover) and (pointer:fine)').matches
+    && !window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if (canTilt){
+    var cardBounds;
+    specCard.addEventListener('mouseenter', function(){
+      cardBounds = specCard.getBoundingClientRect();
+      specCard.classList.add('tilting');
+    });
+    specCard.addEventListener('mousemove', function(e){
+      if (!cardBounds) cardBounds = specCard.getBoundingClientRect();
+      var px = (e.clientX - cardBounds.left) / cardBounds.width;
+      var py = (e.clientY - cardBounds.top) / cardBounds.height;
+      var rotateY = (px - 0.5) * 14;
+      var rotateX = (0.5 - py) * 14;
+      specCard.style.transform = 'perspective(1000px) rotateX('+rotateX+'deg) rotateY('+rotateY+'deg) scale(1.02)';
+    });
+    specCard.addEventListener('mouseleave', function(){
+      specCard.classList.remove('tilting');
+      specCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+    });
+  }
+
+  var tiltToggle = document.getElementById('tiltToggle');
+  if (tiltToggle && specCard && !canTilt){
+    var swiping = false;
+    var touchBounds;
+
+    tiltToggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      swiping = !swiping;
+      specCard.classList.toggle('interactive-mode', swiping);
+      tiltToggle.classList.toggle('active', swiping);
+      tiltToggle.setAttribute('aria-pressed', swiping ? 'true' : 'false');
+      tiltToggle.querySelector('span').textContent = swiping ? 'Tap to Exit' : 'Swipe to Explore';
+      if (!swiping){
+        specCard.classList.remove('tilting');
+        specCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+      }
+    });
+
+    specCard.addEventListener('touchstart', function(){
+      if (!swiping) return;
+      touchBounds = specCard.getBoundingClientRect();
+      specCard.classList.add('tilting');
+    }, {passive:true});
+
+    specCard.addEventListener('touchmove', function(e){
+      if (!swiping) return;
+      e.preventDefault();
+      var t = e.touches[0];
+      if (!touchBounds) touchBounds = specCard.getBoundingClientRect();
+      var px = Math.min(Math.max((t.clientX - touchBounds.left) / touchBounds.width, 0), 1);
+      var py = Math.min(Math.max((t.clientY - touchBounds.top) / touchBounds.height, 0), 1);
+      var rotateY = (px - 0.5) * 16;
+      var rotateX = (0.5 - py) * 16;
+      specCard.style.transform = 'perspective(1000px) rotateX('+rotateX+'deg) rotateY('+rotateY+'deg) scale(1.03)';
+    }, {passive:false});
+
+    specCard.addEventListener('touchend', function(){
+      if (!swiping) return;
+      specCard.classList.remove('tilting');
+      specCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+    });
+  }
 
   var els = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window){

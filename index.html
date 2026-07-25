@@ -127,6 +127,41 @@ header.site{
   vertical-align:-0.2em;
 }
 .wordmark-text .wm-nine svg{display:block;width:100%;height:100%;}
+
+/* cursor-following No.9 mark */
+.cursor-nine{
+  position:fixed;top:0;left:0;
+  width:18px;height:27px;
+  transform:translate(-50%,-50%);
+  pointer-events:none;z-index:300;
+  opacity:0;
+  transition:opacity .35s ease, transform .18s ease;
+  will-change:left, top;
+}
+.cursor-nine.press{transform:translate(-50%,-50%) scale(0.82);}
+.cursor-nine svg{
+  display:block;width:100%;height:100%;
+  filter:drop-shadow(0 0 4px rgba(228,195,116,0.55)) drop-shadow(0 0 11px rgba(148,119,60,0.35));
+}
+.cursor-nine.visible{
+  opacity:1;
+  animation:cursorNineGlow 2.8s ease-in-out infinite;
+}
+@keyframes cursorNineGlow{
+  0%,100%{
+    filter:drop-shadow(0 0 4px rgba(228,195,116,0.5)) drop-shadow(0 0 10px rgba(148,119,60,0.3));
+  }
+  50%{
+    filter:drop-shadow(0 0 7px rgba(228,195,116,0.8)) drop-shadow(0 0 18px rgba(148,119,60,0.45));
+  }
+}
+@media (hover:none), (pointer:coarse){
+  .cursor-nine{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  .cursor-nine{transition:none;animation:none;}
+}
+
 nav.links{display:flex;gap:34px;}
 nav.links a{
   font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
@@ -241,9 +276,10 @@ nav.links a:hover{color:var(--brass-2);}
 .sock-spin{
   position:absolute;inset:0;
   transform-style:preserve-3d;
-  cursor:grab;touch-action:none;will-change:transform;
+  cursor:default;touch-action:pan-y;will-change:transform;
   -webkit-tap-highlight-color:transparent;
 }
+.sock-stage.engaged .sock-spin{cursor:grab;touch-action:none;}
 .sock-stage.grabbing .sock-spin{cursor:grabbing;}
 .sock-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
 .sock-face-back{transform:rotateY(180deg);}
@@ -307,6 +343,37 @@ nav.links a:hover{color:var(--brass-2);}
 @media (prefers-reduced-motion:reduce){
   .spec-card{transition:none;}
   .hotspot::after{animation:none;}
+}
+
+/* click-to-activate gate for the 3D sock viewer */
+.sock-engage{
+  position:absolute;inset:0;z-index:5;border:0;padding:0;margin:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,10,11,0.5);cursor:pointer;
+  transition:opacity .3s ease;
+}
+.sock-engage-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-body);font-weight:700;font-size:11.5px;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:12px 20px;border-radius:2px;
+  background:var(--brass);color:#171208;
+  box-shadow:0 16px 30px -14px rgba(0,0,0,0.7);
+}
+.sock-stage.engaged .sock-engage{opacity:0;pointer-events:none;}
+.sock-exit{
+  position:absolute;top:10px;right:10px;z-index:6;
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--ink);border:1px solid var(--line-strong);color:var(--bone-dim);
+  font-family:var(--font-body);font-weight:700;font-size:10px;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:7px 12px;border-radius:2px;cursor:pointer;
+  opacity:0;pointer-events:none;transition:opacity .2s ease, border-color .2s ease, color .2s ease;
+}
+.sock-stage.engaged .sock-exit{opacity:1;pointer-events:auto;}
+.sock-exit:hover{border-color:var(--brass-dim);color:var(--brass-2);}
+@media (prefers-reduced-motion:reduce){
+  .sock-engage,.sock-exit{transition:none;}
 }
 
 /* spin/zoom hint */
@@ -649,6 +716,10 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
   </defs>
 </svg>
 
+<div class="cursor-nine" id="cursorNine" aria-hidden="true">
+  <svg viewBox="0 0 100 150"><use href="#nineMark" width="100" height="150"/></svg>
+</div>
+
 <div class="intro-loader" id="introLoader" aria-hidden="true">
   <div class="intro-mark">
     <svg viewBox="0 0 100 150" aria-hidden="true"><use href="#nineMark" width="100" height="150"/></svg>
@@ -747,9 +818,15 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
                 <div class="sock-face sock-face-back" id="sockFaceBack"></div>
               </div>
             </div>
+            <button type="button" class="sock-engage" id="sockEngage">
+              <span class="sock-engage-btn"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 8a6 6 0 0 1 10.3-4.2M14 8a6 6 0 0 1-10.3 4.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.3 2.4v2.6h-2.6M3.7 13.6v-2.6h2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Click to Rotate &amp; Zoom</span>
+            </button>
+            <button type="button" class="sock-exit" id="sockExit" aria-label="Exit rotate &amp; zoom mode">
+              <svg width="13" height="13" viewBox="0 0 16 16"><path d="M3 3 L13 13 M13 3 L3 13" stroke="currentColor" stroke-width="1.6"/></svg>Exit
+            </button>
           </div>
         </div>
-        <div class="spin-hint" id="spinHint">Drag to spin &middot; Scroll or pinch to zoom</div>
+        <div class="spin-hint" id="spinHint">Drag to spin &middot; Scroll or pinch to zoom &middot; Esc to exit</div>
       </div>
     </div>
   </section>
@@ -978,6 +1055,58 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
     setTimeout(unlockIntro, 3400);
   }
 
+  (function(){
+    var cursor = document.getElementById('cursorNine');
+    if (!cursor) return;
+    if (window.matchMedia('(hover:none), (pointer:coarse)').matches) return;
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    var targetX = null, targetY = null;
+    var curX = 0, curY = 0;
+    var visible = false;
+    var raf = null;
+
+    function show(x, y){
+      targetX = x; targetY = y;
+      if (!visible){
+        visible = true;
+        curX = x; curY = y;
+        cursor.classList.add('visible');
+      }
+    }
+    function hide(){
+      visible = false;
+      targetX = null; targetY = null;
+      cursor.classList.remove('visible');
+    }
+
+    function onMove(e){
+      show(e.clientX, e.clientY);
+    }
+    // capture-phase on window: fires before any other handler on the page
+    // can intervene, and doesn't depend on a prior mouseenter to "wake up".
+    window.addEventListener('pointermove', onMove, {capture:true, passive:true});
+    window.addEventListener('mousemove', onMove, {capture:true, passive:true});
+    document.addEventListener('mouseout', function(e){
+      if (!e.relatedTarget && !e.toElement) hide();
+    });
+    window.addEventListener('blur', hide);
+    window.addEventListener('mousedown', function(){ cursor.classList.add('press'); }, {capture:true});
+    window.addEventListener('mouseup', function(){ cursor.classList.remove('press'); }, {capture:true});
+
+    function tick(){
+      if (targetX !== null){
+        var ease = reduceMotion ? 1 : 0.18;
+        curX += (targetX - curX) * ease;
+        curY += (targetY - curY) * ease;
+        cursor.style.left = curX + 'px';
+        cursor.style.top = curY + 'px';
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+  })();
+
   var words = ["MATCHDAY ESSENTIALS","EMBROIDERED NO.9","BUILT FOR TRAINING","DESIGNED FOR GIFTING","EST. 2025"];
   var track = document.getElementById('marquee');
   var html = '';
@@ -1031,6 +1160,8 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
     var heroVisual = document.getElementById('heroVisual');
     var frontArt = document.getElementById('sockArtFront');
     var backFace = document.getElementById('sockFaceBack');
+    var engageBtn = document.getElementById('sockEngage');
+    var exitBtn = document.getElementById('sockExit');
     if (!stage || !spin || !zoomEl || !frontArt || !backFace) return;
 
     var clone = frontArt.cloneNode(true);
@@ -1050,6 +1181,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
     var idleRaf = null;
     var interacted = false;
     var pinchDist = null, pinchZoom = 1;
+    var engaged = false;
 
     function applyRotation(){
       spin.style.transform = 'rotateX('+rotX+'deg) rotateY('+rotY+'deg)';
@@ -1065,6 +1197,41 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       interacted = true;
       if (heroVisual) heroVisual.classList.add('has-interacted');
     }
+
+    function engage(){
+      if (engaged) return;
+      engaged = true;
+      stage.classList.add('engaged');
+      stopIdle();
+    }
+    function disengage(){
+      if (!engaged) return;
+      engaged = false;
+      dragging = false;
+      pinchDist = null;
+      stage.classList.remove('engaged', 'grabbing');
+      if (!reduceMotion && !idleRaf){
+        idleRaf = requestAnimationFrame(idleTick);
+      }
+    }
+    if (engageBtn){
+      engageBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        engage();
+      });
+    }
+    if (exitBtn){
+      exitBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        disengage();
+      });
+    }
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && engaged) disengage();
+    });
+    document.addEventListener('click', function(e){
+      if (engaged && !stage.contains(e.target)) disengage();
+    });
 
     function stopIdle(){
       if (idleRaf){ cancelAnimationFrame(idleRaf); idleRaf = null; }
@@ -1095,9 +1262,10 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
     }
 
     function onPointerDown(e){
+      if (!engaged) return;
+      if (e.target.closest('.hotspot, .sock-exit, .sock-engage')) return;
       stopIdle();
       stopInertia();
-      if (e.target.closest('.hotspot')) return;
       dragging = true;
       lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
       velX = 0; velY = 0;
@@ -1137,11 +1305,13 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
     stage.addEventListener('pointerup', onPointerUp);
     stage.addEventListener('pointercancel', onPointerUp);
     stage.addEventListener('pointerenter', function(){
+      if (!engaged) return;
       stopIdle();
       stopInertia();
     });
 
     stage.addEventListener('wheel', function(e){
+      if (!engaged) return;
       e.preventDefault();
       zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom - e.deltaY * 0.0016));
       applyZoom();
@@ -1154,6 +1324,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       return Math.sqrt(dx * dx + dy * dy);
     }
     stage.addEventListener('touchstart', function(e){
+      if (!engaged) return;
       if (e.touches.length === 2){
         dragging = false;
         stopIdle();
@@ -1163,6 +1334,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       }
     }, {passive:true});
     stage.addEventListener('touchmove', function(e){
+      if (!engaged) return;
       if (e.touches.length === 2 && pinchDist){
         e.preventDefault();
         var d = touchDist(e.touches);
@@ -1172,6 +1344,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       }
     }, {passive:false});
     stage.addEventListener('touchend', function(e){
+      if (!engaged) return;
       if (e.touches.length < 2) pinchDist = null;
     });
   })();

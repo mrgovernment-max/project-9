@@ -346,9 +346,20 @@ section{padding:96px 0;border-bottom:1px solid var(--line);}
 }
 .kit-card:hover{background:var(--surface-2);}
 .kit-card.clickable{cursor:pointer;}
-.kit-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.kit-media{
+  position:relative;margin:-32px -28px 4px;aspect-ratio:4/3;overflow:hidden;
+  background:#000;border-bottom:1px solid var(--line);
+}
+.kit-media img{
+  width:100%;height:100%;object-fit:contain;object-position:center;display:block;
+  padding:16px;box-sizing:border-box;transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.kit-card.clickable:hover .kit-media img{transform:scale(1.05);}
+.kit-media .kit-no{
+  position:absolute;top:14px;left:16px;z-index:1;
+  background:rgba(10,10,11,0.6);padding:3px 9px;border-radius:2px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
 .kit-no{font-family:var(--font-display);font-size:13px;color:var(--brass-dim);letter-spacing:0.06em;}
-.kit-icon{width:64px;height:64px;color:var(--brass-2);}
 .kit-card h4{
   font-family:var(--font-display);font-size:26px;font-weight:400;text-transform:uppercase;letter-spacing:0.02em;
   color:var(--bone);
@@ -600,7 +611,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
   .section-head h2{font-size:clamp(28px,8vw,38px);margin-top:6px;}
   .compare-col{padding:24px 22px;}
   .kit-card{padding:24px 20px 20px;gap:14px;}
-  .kit-icon{width:52px;height:52px;}
+  .kit-media{margin:-24px -20px 4px;}
   .kit-card h4{font-size:22px;}
   .set-card{padding:26px 22px;gap:16px;}
   form.capture{flex-direction:column;}
@@ -768,45 +779,45 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       </div>
       <div class="kit-grid reveal">
         <div class="kit-card clickable" data-kit="grip-socks">
-          <div class="kit-top">
+          <div class="kit-media">
             <span class="kit-no">No. 01</span>
-            <svg class="kit-icon" viewBox="0 0 64 64" fill="none"><path d="M24 6v26q0 10 9 15l16 9q6 3 5-4-1-6-7-9l-9-5q-4-2-4-8V6z" stroke="currentColor" stroke-width="1.5"/><circle cx="30" cy="38" r="4" stroke="currentColor" stroke-width="1.2"/></svg>
+            <img src="assets/kit/grip-socks.png" alt="Project Nine grip socks" loading="lazy">
           </div>
           <h4>Grip Socks</h4>
           <p>Anti-slip sole, breathable weave, signature embroidered 9.</p>
           <div class="kit-spec"><span>UK 6&ndash;12 &middot; Reinforced Heel</span><svg class="kit-arrow" width="14" height="14" viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></div>
         </div>
         <div class="kit-card clickable" data-kit="sock-wrap">
-          <div class="kit-top">
+          <div class="kit-media">
             <span class="kit-no">No. 02</span>
-            <svg class="kit-icon" viewBox="0 0 64 64" fill="none"><rect x="18" y="14" width="28" height="40" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M26 14 V8 h12 v6" stroke="currentColor" stroke-width="1.5"/><path d="M18 26 h28" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg>
+            <img src="assets/kit/sock-wrap.png" alt="Project Nine sock wrap tape rolls" loading="lazy">
           </div>
           <h4>Sock Wrap</h4>
           <p>Self-adhesive, flexible hold, keeps your socks locked in every session.</p>
           <div class="kit-spec"><span>Latex-Free &middot; 4.5m Roll</span><svg class="kit-arrow" width="14" height="14" viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></div>
         </div>
         <div class="kit-card clickable" data-kit="resistance-band">
-          <div class="kit-top">
+          <div class="kit-media">
             <span class="kit-no">No. 03</span>
-            <svg class="kit-icon" viewBox="0 0 64 64" fill="none"><path d="M14 20 Q32 6 50 20 Q32 34 14 20Z" stroke="currentColor" stroke-width="1.5"/><path d="M14 20 Q10 34 22 46 M50 20 Q54 34 42 46" stroke="currentColor" stroke-width="1.5"/></svg>
+            <img src="assets/kit/resistance-band.png" alt="Project Nine resistance band" loading="lazy">
           </div>
           <h4>Resistance Band</h4>
           <p>Premium TPE material, built for strength work, warm-ups and recovery.</p>
           <div class="kit-spec"><span>3 Resistance Levels</span><svg class="kit-arrow" width="14" height="14" viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></div>
         </div>
         <div class="kit-card clickable" data-kit="shaker">
-          <div class="kit-top">
+          <div class="kit-media">
             <span class="kit-no">No. 04</span>
-            <svg class="kit-icon" viewBox="0 0 64 64" fill="none"><path d="M22 12h20v6l-4 4v26q0 6-6 6t-6-6V22l-4-4z" stroke="currentColor" stroke-width="1.5"/><path d="M22 26h20" stroke="currentColor" stroke-width="1"/></svg>
+            <img src="assets/kit/shaker.png" alt="Project Nine performance shaker" loading="lazy">
           </div>
           <h4>Performance Shaker</h4>
           <p>Food-grade, BPA-free, leak-proof &mdash; built for more than just protein.</p>
           <div class="kit-spec"><span>600ml Capacity</span><svg class="kit-arrow" width="14" height="14" viewBox="0 0 16 16"><path d="M6 3 L11 8 L6 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></div>
         </div>
         <div class="kit-card clickable" data-kit="towel">
-          <div class="kit-top">
+          <div class="kit-media">
             <span class="kit-no">No. 05</span>
-            <svg class="kit-icon" viewBox="0 0 64 64" fill="none"><rect x="12" y="16" width="40" height="32" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 26h40M22 16v32" stroke="currentColor" stroke-width="1"/></svg>
+            <img src="assets/kit/towel.png" alt="Project Nine premium towel" loading="lazy">
           </div>
           <h4>Premium Towel</h4>
           <p>100% cotton, woven label, built for comfort after the final whistle.</p>

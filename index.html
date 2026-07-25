@@ -882,7 +882,7 @@ footer{padding:48px 0 40px;}
       specCard.classList.toggle('interactive-mode', swiping);
       tiltToggle.classList.toggle('active', swiping);
       tiltToggle.setAttribute('aria-pressed', swiping ? 'true' : 'false');
-      tiltToggle.querySelector('span').textContent = swiping ? 'Tap to Exit' : 'Swipe to Explore';
+      tiltToggle.querySelector('span').textContent = swiping ? 'Swipe to Interact' : 'Swipe to interact';
       if (!swiping){
         specCard.classList.remove('tilting');
         specCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';

@@ -597,7 +597,7 @@ footer{padding:48px 0 40px;}
         </div>
         <button type="button" class="tilt-toggle" id="tiltToggle" aria-pressed="false">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M5 3 L2 8 L5 13 M11 3 L14 8 L11 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>click to interact</span>
+          <span>click me to interact</span>
         </button>
       </div>
     </div>
@@ -882,7 +882,7 @@ footer{padding:48px 0 40px;}
       specCard.classList.toggle('interactive-mode', swiping);
       tiltToggle.classList.toggle('active', swiping);
       tiltToggle.setAttribute('aria-pressed', swiping ? 'true' : 'false');
-      tiltToggle.querySelector('span').textContent = swiping ? 'Swipe to Interact' : 'Swipe to interact';
+      tiltToggle.querySelector('span').textContent = swiping ? 'Swipe on sock to Interact' : 'Click me to interact';
       if (!swiping){
         specCard.classList.remove('tilting');
         specCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';

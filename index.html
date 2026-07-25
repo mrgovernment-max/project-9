@@ -255,6 +255,8 @@ nav.links a:hover{color:var(--brass-2);}
   animation:hotspotPulse 2.4s ease-out infinite;
 }
 .hotspot:nth-of-type(2)::after{animation-delay:.6s;}
+.hotspot:nth-of-type(3)::after{animation-delay:1.2s;}
+.hotspot:nth-of-type(4)::after{animation-delay:1.8s;}
 .hotspot:hover::before,.hotspot.active::before{transform:scale(1.3);background:var(--bone);}
 @keyframes hotspotPulse{
   0%{width:9px;height:9px;opacity:.7;}
@@ -279,6 +281,11 @@ nav.links a:hover{color:var(--brass-2);}
 .hotspot-sole .hotspot-tip::after{left:auto;right:16px;transform:none;}
 .hotspot-sole:hover .hotspot-tip,.hotspot-sole.active .hotspot-tip{transform:translate(0,0);}
 .hotspot-nine{left:46.9%;top:62.7%;}
+.hotspot-breathe{left:48.4%;top:35%;}
+.hotspot-stretch{left:40%;top:15%;}
+.hotspot-stretch .hotspot-tip{bottom:auto;top:calc(100% + 12px);transform:translate(-50%,-4px);}
+.hotspot-stretch .hotspot-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--line-strong);}
+.hotspot-stretch:hover .hotspot-tip,.hotspot-stretch.active .hotspot-tip{transform:translate(-50%,0);}
 @media (prefers-reduced-motion:reduce){
   .spec-card{transition:none;}
   .hotspot::after{animation:none;}
@@ -490,6 +497,54 @@ footer{padding:48px 0 40px;}
 .reveal.in{opacity:1;transform:translateY(0);}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
 
+/* ---------- intro loader ---------- */
+html.intro-lock,html.intro-lock body{overflow:hidden;height:100%;}
+.intro-loader{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  background:var(--ink);
+  animation:introOut .7s ease forwards;
+  animation-delay:2.3s;
+}
+.intro-mark{
+  position:relative;width:56px;height:84px;overflow:hidden;
+  opacity:0;filter:drop-shadow(0 0 26px rgba(201,160,78,0.35));
+  animation:introMarkIn .8s cubic-bezier(.16,1,.3,1) forwards;
+  animation-delay:.15s;
+}
+.intro-mark svg{width:100%;height:100%;}
+.intro-mark::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.6) 48%, transparent 66%);
+  background-size:220% 220%;background-position:-140% -140%;
+  mix-blend-mode:overlay;
+  animation:introShimmer 1s ease forwards;
+  animation-delay:.75s;
+}
+.intro-rule{
+  width:0;height:1px;background:var(--brass);
+  animation:introRuleIn .5s ease forwards;
+  animation-delay:.95s;
+}
+.intro-word{
+  font-family:var(--font-display);font-size:12px;letter-spacing:0.42em;
+  color:var(--bone-dim);opacity:0;transform:translateY(6px);
+  animation:introWordIn .6s ease forwards;
+  animation-delay:1.15s;
+}
+@keyframes introMarkIn{from{opacity:0;transform:translateY(10px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes introShimmer{to{background-position:140% 140%;}}
+@keyframes introRuleIn{to{width:64px;}}
+@keyframes introWordIn{to{opacity:1;transform:translateY(0);}}
+@keyframes introOut{to{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.04);}}
+@media (prefers-reduced-motion:reduce){
+  .intro-loader{animation:introOut .01s linear forwards;animation-delay:.4s;}
+  .intro-mark{animation:none;opacity:1;transform:none;}
+  .intro-mark::after{display:none;}
+  .intro-rule{animation:none;width:64px;}
+  .intro-word{animation:none;opacity:1;transform:none;}
+}
+
 /* ---------- mobile tightening ---------- */
 @media (max-width:640px){
   section{padding:60px 0;}
@@ -528,6 +583,15 @@ footer{padding:48px 0 40px;}
     </symbol>
   </defs>
 </svg>
+
+<div class="intro-loader" id="introLoader" aria-hidden="true">
+  <div class="intro-mark">
+    <svg viewBox="0 0 100 150" aria-hidden="true"><use href="#nineMark" width="100" height="150"/></svg>
+  </div>
+  <div class="intro-rule"></div>
+  <div class="intro-word">PROJECT NINE</div>
+</div>
+<script>document.documentElement.classList.add('intro-lock');</script>
 
 <div class="marquee-bar">
   <div class="wrap">
@@ -586,12 +650,30 @@ footer{padding:48px 0 40px;}
               <circle cx="150" cy="188" r="15" stroke="#e4c374" stroke-width="1.4"/>
               <use href="#nineMark" x="142.65" y="177" width="14.7" height="22"/>
               <path d="M245 250 Q260 246 264 233" stroke="#ede7d9" stroke-width="0.8" opacity="0.4"/>
+              <text x="172" y="215.7" transform="rotate(25.2 172 215.7)" fill="#ede7d9" fill-opacity="0.6" font-size="8" font-weight="800" letter-spacing="1.3" font-family="Archivo Var, Arial, sans-serif">PROJECT NINE</text>
+              <g fill="#8c723a">
+                <circle cx="240.2" cy="210.4" r="2.2" fill-opacity=".65"/>
+                <circle cx="247.4" cy="213.8" r="2.2" fill-opacity=".65"/>
+                <circle cx="254.6" cy="217.2" r="2.2" fill-opacity=".65"/>
+                <circle cx="236.8" cy="217.6" r="2.2" fill-opacity=".65"/>
+                <circle cx="244" cy="221" r="2.2" fill-opacity=".65"/>
+                <circle cx="251.2" cy="224.4" r="2.2" fill-opacity=".65"/>
+                <circle cx="233.4" cy="224.8" r="2.2" fill-opacity=".65"/>
+                <circle cx="240.6" cy="228.2" r="2.2" fill-opacity=".65"/>
+                <circle cx="247.8" cy="231.6" r="2.2" fill-opacity=".65"/>
+              </g>
             </svg>
             <button type="button" class="hotspot hotspot-nine" aria-label="Embroidered No.9 Detail">
               <span class="hotspot-tip">Embroidered <b>No.9 Detail</b></span>
             </button>
             <button type="button" class="hotspot hotspot-sole" aria-label="Anti-Slip Grip Sole">
               <span class="hotspot-tip">Anti-Slip <b>Grip Sole</b></span>
+            </button>
+            <button type="button" class="hotspot hotspot-breathe" aria-label="Breathable Fabric">
+              <span class="hotspot-tip">Breathable <b>Fabric</b></span>
+            </button>
+            <button type="button" class="hotspot hotspot-stretch" aria-label="Stretch Fit">
+              <span class="hotspot-tip">Stretch <b>Fit</b></span>
             </button>
           </div>
         </div>
@@ -801,6 +883,18 @@ footer{padding:48px 0 40px;}
 
 <script>
 (function(){
+  var introLoader = document.getElementById('introLoader');
+  if (introLoader){
+    var unlockIntro = function(){
+      document.documentElement.classList.remove('intro-lock');
+      if (introLoader.parentNode) introLoader.parentNode.removeChild(introLoader);
+    };
+    introLoader.addEventListener('animationend', function(e){
+      if (e.target === introLoader) unlockIntro();
+    });
+    setTimeout(unlockIntro, 3400);
+  }
+
   var words = ["MATCHDAY ESSENTIALS","EMBROIDERED NO.9","BUILT FOR TRAINING","DESIGNED FOR GIFTING","EST. 2025"];
   var track = document.getElementById('marquee');
   var html = '';

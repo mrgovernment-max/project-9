@@ -627,6 +627,13 @@ section{padding:96px 0;border-bottom:1px solid var(--line);}
   letter-spacing:0.1em;text-transform:uppercase;padding:7px 14px;
   border-radius:0 22px 0 14px;
 }
+.set-nine{
+  position:absolute;top:20px;left:20px;width:28px;height:28px;
+  opacity:.5;pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.set-nine svg{display:block;width:100%;height:100%;}
+.set-card:hover .set-nine{opacity:.85;transform:scale(1.08);}
 .set-card h4{font-family:var(--font-display);font-size:28px;text-transform:uppercase;}
 .set-card .set-tag{font-size:12px;color:var(--bone-faint);letter-spacing:0.04em;}
 .set-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
@@ -1007,6 +1014,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       </div>
       <div class="sets reveal">
         <div class="set-card">
+          <div class="set-nine" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#c9a04e" stroke-width="1.2"/><use href="#nineMark" x="11.5" y="7.25" width="17" height="25.5"/></svg></div>
           <div><h4>Starter</h4><div class="set-tag">The essentials</div></div>
           <ul>
             <li><svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 8 L7 12 L13 4" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>Grip Socks</li>
@@ -1016,6 +1024,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
         </div>
         <div class="set-card pro">
           <div class="set-badge">Most Wanted</div>
+          <div class="set-nine" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#c9a04e" stroke-width="1.2"/><use href="#nineMark" x="11.5" y="7.25" width="17" height="25.5"/></svg></div>
           <div><h4>Playmaker</h4><div class="set-tag">Train &amp; recover</div></div>
           <ul>
             <li><svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 8 L7 12 L13 4" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>Everything in Starter</li>
@@ -1024,6 +1033,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
           </ul>
         </div>
         <div class="set-card">
+          <div class="set-nine" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#c9a04e" stroke-width="1.2"/><use href="#nineMark" x="11.5" y="7.25" width="17" height="25.5"/></svg></div>
           <div><h4>Pro Gift Set</h4><div class="set-tag">The full kit</div></div>
           <ul>
             <li><svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 8 L7 12 L13 4" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>Everything in Playmaker</li>

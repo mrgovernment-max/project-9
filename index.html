@@ -74,6 +74,7 @@ p{line-height:1.6;color:var(--bone-dim);margin:0;font-size:16px;max-width:60ch;}
 
 /* ---------- marquee ---------- */
 .marquee-bar{
+  display:none;
   border-bottom:1px solid var(--line);
   background:var(--surface);
   overflow:hidden;
@@ -1174,10 +1175,10 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
         var restBefore = document.getElementById('introRestBefore');
         var flipSix = document.getElementById('flipSix');
         var restAfter = document.getElementById('introRestAfter');
-        var SENTENCE = 'turned the 6 upside down its a 9 now';
+        var SENTENCE = 'Turn the 6 upside down its a 9 now';
         var SIX_INDEX = SENTENCE.indexOf('6');
         var FLIP_AT = SIX_INDEX + 2; // right as "upside" starts typing
-        var CHAR_MS = 46;
+        var CHAR_MS = 102;
         var PAUSE_AFTER_TYPE = 650;
         var REST_FADE_MS = 550;
         var ZOOM_MS = 750;

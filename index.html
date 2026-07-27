@@ -712,29 +712,7 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
   animation:introOut .7s ease forwards;
   animation-delay:2.3s;
 }
-/* phase 1: typewriter line, the "6" that flips into a "9" */
-.intro-type{
-  position:absolute;inset:0;z-index:1;
-  display:flex;align-items:center;justify-content:center;
-  padding:0 28px;text-align:center;
-  transition:opacity .4s ease;
-}
-.intro-loader.logo-phase .intro-type{opacity:0;}
-.intro-type-text{
-  font-family:var(--font-display);font-size:clamp(26px,5.4vw,42px);
-  letter-spacing:0.04em;text-transform:uppercase;color:var(--bone);
-}
-.rest-text{transition:opacity .45s ease;}
-.intro-type.leftover .rest-text{opacity:0;}
-.flip-six{display:inline-block;transition:transform .6s cubic-bezier(.3,0,.15,1);}
-.flip-six.flip{animation:introFlipSix .7s cubic-bezier(.32,0,.2,1) forwards;}
-.intro-caret{
-  display:inline-block;width:2px;height:0.85em;margin-left:3px;vertical-align:-0.08em;
-  background:var(--brass-2);
-  animation:introCaretBlink .9s steps(1) infinite;
-}
-.intro-type.done .intro-caret{animation:none;opacity:0;transition:opacity .3s ease;}
-/* phase 2: the same mark, now the brand loader */
+/* project nine brand loader */
 .intro-mark{
   position:relative;width:56px;height:84px;overflow:hidden;
   opacity:0;filter:drop-shadow(0 0 26px rgba(201,160,78,0.35));
@@ -767,17 +745,11 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
   animation:introWordIn .6s ease forwards;
   animation-delay:1.15s;
 }
-@keyframes introFlipSix{to{transform:rotate(180deg);}}
-@keyframes introCaretBlink{50%{opacity:0;}}
 @keyframes introMarkIn{from{opacity:0;transform:translateY(10px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes introShimmer{to{background-position:140% 140%;}}
 @keyframes introRuleIn{to{width:64px;}}
 @keyframes introWordIn{to{opacity:1;transform:translateY(0);}}
 @keyframes introOut{to{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.04);}}
-@media (prefers-reduced-motion:reduce){
-  .intro-caret{animation:none;}
-  .flip-six.flip{animation:none;transform:rotate(180deg);}
-}
 
 /* ---------- mobile tightening ---------- */
 @media (max-width:640px){
@@ -823,9 +795,6 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
 </div>
 
 <div class="intro-loader" id="introLoader" aria-hidden="true">
-  <div class="intro-type" id="introType">
-    <span class="intro-type-text"><span class="rest-text" id="introRestBefore"></span><span class="flip-six" id="flipSix"></span><span class="rest-text" id="introRestAfter"></span></span><span class="intro-caret"></span>
-  </div>
   <div class="intro-mark">
     <svg viewBox="0 0 100 150" aria-hidden="true"><use href="#nineMark" width="100" height="150"/></svg>
   </div>
@@ -1171,56 +1140,8 @@ html.intro-lock,html.intro-lock body,html.no-scroll,html.no-scroll body{overflow
       unlockIntro();
     } else {
       (function(){
-        var typeWrap = document.getElementById('introType');
-        var restBefore = document.getElementById('introRestBefore');
-        var flipSix = document.getElementById('flipSix');
-        var restAfter = document.getElementById('introRestAfter');
-        var SENTENCE = 'Turn the 6 upside down its a 9 now';
-        var SIX_INDEX = SENTENCE.indexOf('6');
-        var FLIP_AT = SIX_INDEX + 2; // right as "upside" starts typing
-        var CHAR_MS = 102;
-        var PAUSE_AFTER_TYPE = 650;
-        var REST_FADE_MS = 550;
-        var ZOOM_MS = 750;
-        var i = 0;
-
-        function typeNext(){
-          if (i < SENTENCE.length){
-            var ch = SENTENCE[i];
-            var target = i < SIX_INDEX ? restBefore : (i === SIX_INDEX ? flipSix : restAfter);
-            target.appendChild(document.createTextNode(ch));
-            i++;
-            if (i === FLIP_AT){
-              flipSix.classList.add('flip');
-            }
-            setTimeout(typeNext, CHAR_MS);
-          } else {
-            typeWrap.classList.add('done');
-            setTimeout(function(){
-              // fade away everything except the flipped 9
-              typeWrap.classList.add('leftover');
-              setTimeout(function(){
-                // little zoom: the leftover 9 scales up and drifts to true center.
-                // set animation:none and hold the same rotated value in one synchronous
-                // step so there's no flash back to the un-rotated "6" mid-transition.
-                flipSix.style.animation = 'none';
-                flipSix.style.transform = 'rotate(180deg)';
-                var rect = flipSix.getBoundingClientRect();
-                var dx = (window.innerWidth / 2) - (rect.left + rect.width / 2);
-                var dy = (window.innerHeight / 2) - (rect.top + rect.height / 2);
-                void flipSix.offsetWidth; // flush so the transition picks up the new target value
-                flipSix.style.transform = 'translate('+dx+'px,'+dy+'px) rotate(180deg) scale(1.7)';
-                setTimeout(function(){
-                  // hand off: the leftover 9 cross-fades into the real brand mark
-                  introLoader.classList.add('logo-phase');
-                }, ZOOM_MS);
-              }, REST_FADE_MS);
-            }, PAUSE_AFTER_TYPE);
-          }
-        }
-        typeNext();
-
-        var fallback = SENTENCE.length * CHAR_MS + PAUSE_AFTER_TYPE + REST_FADE_MS + ZOOM_MS + 3400;
+        introLoader.classList.add('logo-phase');
+        var fallback = 2300 + 700 + 400; // introOut delay + duration + buffer
         setTimeout(unlockIntro, fallback);
       })();
     }
